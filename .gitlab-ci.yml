@@ -1,0 +1,62 @@
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+
+build jdw dev:
+  image: registry.yunmotec.com:1443/gradle:7.3.3-jdk11
+  tags:
+    - java
+  stage: build
+  script:
+    - gradle jib -Djib.to.image=registry.yunmotec.com:1443/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID -Djib.disableUpdateChecks=true -Djib.allowInsecureRegistries=true
+  cache:
+    key: "$CI_PROJECT_NAME"
+    paths:
+      - jdw-infrastruction/build
+      - jdw-domain/build
+      - jdw-server/build
+      - .gradle
+  only:
+    - develop
+
+build jdw qa:
+  image: registry.yunmotec.com:1443/gradle:7.3.3-jdk11
+  tags:
+    - java
+  stage: build
+  script:
+    - gradle jib -Djib.to.image=registry.yunmotec.com:1443/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - jdw-infrastruction/build
+      - jdw-domain/build
+      - jdw-server/build
+      - .gradle
+  only:
+    - qa
+
+build jdw prod:
+  image: registry.yunmotec.com:1443/gradle:7.3.3-jdk11
+  tags:
+    - java
+  stage: build
+  script:
+    - gradle jib -Djib.to.image=registry.yunmotec.com:1443/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID -Djib.disableUpdateChecks=true -Djib.allowInsecureRegistries=true
+  cache:
+    key: "$CI_PROJECT_NAME"
+    paths:
+      - jdw-infrastruction/build
+      - jdw-domain/build
+      - jdw-server/build
+      - .gradle
+  only:
+        - master
+
+
+

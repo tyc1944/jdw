@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunmo.jdw.infrastruction.mapper.FalseActionMapper">
+    <select id="findByNearRepeatCompany" resultType="com.yunmo.jdw.domian.FalseAction">
+        select * from false_action
+        <where>
+            defendant = (select defendant from false_action order by last_modified_date desc limit 1)
+        </where>
+
+    </select>
+
+    <select id="findBySearchRepeatCompany" resultType="com.yunmo.jdw.domian.FalseAction">
+        select fs.*
+        FROM false_action fs
+        LEFT JOIN ( SELECT defendant, min( created_date ) AS time, min( id ) AS id
+        FROM false_action
+        GROUP BY defendant ORDER BY time ) AS orderTabel
+        ON fs.defendant = orderTabel.defendant
+        <where>
+            <if test="searchInfo!=null">
+                AND (plaintiff like concat('%', #{searchInfo}, '%') or
+                defendant like concat('%', #{searchInfo}, '%'))
+            </if>
+        </where>
+        order by
+        orderTabel.time,
+        orderTabel.id
+    </select>
+
+    <select id="findBySignOnlineList" resultType="com.yunmo.jdw.domian.FalseAction">
+        select fs.* from false_action fs
+        LEFT JOIN ( SELECT defendant, min( created_date ) AS time, min( id ) AS id
+        FROM false_action
+        GROUP BY defendant ORDER BY time ) AS orderTabel
+        ON fs.defendant = orderTabel.defendant
+        <where>
+            <if test="sign!=null">
+                AND sign=#{sign}
+            </if>
+        </where>
+        order by
+        orderTabel.time,
+        orderTabel.id
+    </select>
+</mapper>

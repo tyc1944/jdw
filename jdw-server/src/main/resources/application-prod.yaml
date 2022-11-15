@@ -1,0 +1,32 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+  file:
+    location: /data/file
+  jpa:
+    properties:
+      hibernate:
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+        physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        enable_lazy_load_no_trans: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        show-sql: true
+        hbm2ddl:
+          auto: update
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/jdw?characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: Jcy12345678$
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://10.234.12.89:8080/oauth2/jwks
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

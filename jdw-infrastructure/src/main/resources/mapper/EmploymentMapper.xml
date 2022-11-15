@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunmo.jdw.infrastruction.mapper.EmploymentMapper">
+
+    <resultMap id="BaseResultMap" type="com.yunmo.jdw.domian.Employment">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="cardId" column="card_id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="VARCHAR"/>
+            <result property="company" column="company" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,card_id,name,
+        gender,company
+    </sql>
+
+</mapper>

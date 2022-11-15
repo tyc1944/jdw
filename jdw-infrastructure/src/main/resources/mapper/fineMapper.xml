@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunmo.jdw.infrastruction.mapper.fineMapper">
+
+    <select id="findByNewSearchMaliciousList" resultType="com.yunmo.jdw.domian.fine">
+        select * from fine
+        <where>
+            AND logout_time is not null
+            AND TIMESTAMPDIFF(MONTH,penalty_time,logout_time) <![CDATA[<=]]> 5
+        </where>
+    </select>
+
+    <select id="findFineListByCompanyName" resultType="com.yunmo.jdw.domian.fine">
+        select * from fine
+        <where>
+            <if test="qccJsonList!=null and qccJsonList.size>0">
+            And company_name in
+            <foreach item="item" index="index" collection="qccJsonList" open="(" separator="," close=")">
+                #{item.companyName}
+            </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

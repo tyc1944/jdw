@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library-conventions'
+}
+
+dependencies {
+    api "com.yunmo:domain-commons"
+    implementation "com.yunmo:id-generator"
+    api "org.springdoc:springdoc-openapi-ui"
+    api "org.springdoc:springdoc-openapi-security"
+    implementation "com.vladmihalcea:hibernate-types-52:$hibernateTypes52"
+    api "com.baomidou:mybatis-plus-boot-starter:$mybatisPlusBootStarter"
+}

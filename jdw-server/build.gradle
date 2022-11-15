@@ -1,0 +1,16 @@
+plugins {
+    id 'java-application-conventions'
+}
+
+application {
+    mainClass  = 'com.yunmo.jdw.ServerApplication'
+}
+
+
+dependencies {
+    implementation project(":jdw-infrastructure")
+    implementation 'com.yunmo.boot:resource-server-starter'
+    implementation 'com.yunmo.boot:rest-server-starter'
+    implementation 'com.yunmo.boot:data-starter'
+    implementation 'org.zalando:problem-spring-web-starter:0.27.0'
+}

@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library-conventions'
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/java/main"
+    }
+}
+compileJava {
+    dependsOn(cleanProcessResources, processResources)
+}
+
+
+dependencies {
+    api project(":jdw-domain")
+    api "com.baomidou:mybatis-plus-boot-starter:$mybatisPlusBootStarter"
+    implementation "com.yunmo.boot:data-starter"
+    implementation 'com.yunmo.boot:rest-server-starter'
+    implementation 'com.alibaba:fastjson:2.0.7'
+    implementation 'org.apache.poi:poi:3.9'
+    implementation 'org.apache.poi:poi-ooxml:3.9'
+    implementation 'org.apache.poi:poi-scratchpad:3.8'
+    implementation 'org.json:json:20180813'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.1'
+//    implementation 'net.sf.json-lib:json-lib:2.2.3:jdk15'
+//    implementation 'net.sf.ezmorph:ezmorph:1.0.6'
+
+}

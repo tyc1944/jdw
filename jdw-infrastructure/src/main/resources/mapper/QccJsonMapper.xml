@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunmo.jdw.infrastruction.mapper.QccJsonMapper">
+
+    <resultMap id="BaseResultMap" type="com.yunmo.jdw.domian.QccJson">
+        <result property="result" column="result" jdbcType="OTHER"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+    </resultMap>
+    <select id="findByAllSearchQccJsonList" resultMap="BaseResultMap">
+        select * from qcc_json
+        <where>
+            <if test="listQccViewRequest.qccType=='malice'">
+                and qcc_type='malice'
+            </if>
+            <if test="listQccViewRequest.qccType=='natural'">
+                and qcc_type='natural'
+            </if>
+            <if test="listQccViewRequest.searchField!=null">
+                and company_name like concat('%', #{listQccViewRequest.searchField}, '%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findBySignOnlineList" resultMap="BaseResultMap">
+        select * from qcc_json
+        <where>
+            <if test="sign!=null">
+                AND sign=#{sign}
+            </if>
+            And qcc_type='malice'
+        </where>
+    </select>
+</mapper>

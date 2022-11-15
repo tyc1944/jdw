@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunmo.jdw.infrastruction.mapper.ConciliationStatementMapper">
+
+    <resultMap id="BaseResultMap" type="com.yunmo.jdw.domian.ConciliationStatement">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="plaintiff" column="plaintiff" jdbcType="VARCHAR"/>
+        <result property="defendant" column="defendant" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findByRepeatCompanyPageList" resultMap="BaseResultMap">
+        select
+        cs.*
+        FROM
+        conciliation_statement cs
+        LEFT JOIN ( SELECT defendant, min( created_date ) AS time, min( id ) AS id
+        FROM conciliation_statement
+        GROUP BY defendant ORDER BY time ) AS orderTabel
+        ON cs.defendant = orderTabel.defendant
+        <where>
+            ANd cs.defendant in(select defendant
+            FROM conciliation_statement
+            GROUP BY defendant
+            HAVING count(defendant) > 1)
+        </where>
+        ORDER BY
+        orderTabel.time,
+        orderTabel.id
+    </select>
+
+    <!--查找重复公司名的调解书列表-->
+    <select id="findByRepeatCompanyList" resultMap="BaseResultMap">
+        select
+        *
+        FROM conciliation_statement
+        <where>
+            ANd defendant in(select defendant
+            FROM conciliation_statement
+            GROUP BY defendant
+            HAVING count(defendant) > 1)
+            <if test="fileNameList!=null and fileNameList.size>0">
+                and defendant in
+                <foreach item="item" index="index" collection="fileNameList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findByEmploymentRepeatList" resultMap="BaseResultMap">
+        select
+        *
+        from conciliation_statement c
+        INNER JOIN employment e ON ( c.plaintiff = e.NAME AND c.defendant = e.company )
+        <where>
+            <if test="companyList !=null and companyList.size() > 0">
+                and plaintiff in
+                <foreach item="item" index="index" collection="companyList" open="(" separator="," close=")">
+                    #{item.plaintiff}
+                </foreach>
+                and defendant in
+                <foreach item="item" index="index" collection="companyList" open="(" separator="," close=")">
+                    #{item.defendant}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="findBySocialRepeatList" resultMap="BaseResultMap">
+        select
+        *
+        from conciliation_statement c
+        INNER JOIN social_insurance s ON ( c.plaintiff = s.NAME AND c.defendant = s.company )
+        <where>
+            <if test="companyList !=null and companyList.size() > 0">
+                and plaintiff in
+                <foreach item="item" index="index" collection="companyList" open="(" separator="," close=")">
+                    #{item.plaintiff}
+                </foreach>
+                and defendant in
+                <foreach item="item" index="index" collection="companyList" open="(" separator="," close=")">
+                    #{item.defendant}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>
